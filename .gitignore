@@ -1,1 +1,8 @@
 .gradle
+build
+*.ipr
+.idea
+*.ipw
+.classpath
+.project
+.settings

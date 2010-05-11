@@ -1,4 +1,5 @@
 apply plugin: "scala"
+defaultTasks 'build'
 
 scalaVersion = "2.7.6"
 repositories {
@@ -14,6 +15,6 @@ dependencies {
   compile "org.scala-lang:scala-library:${scalaVersion}"
 }
 
-createTask('wrapper', type: Wrapper).configure { 
+task wrapper(type: Wrapper) { 
   gradleVersion = '0.9-preview-1' 
 }
