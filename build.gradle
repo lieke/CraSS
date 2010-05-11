@@ -1,0 +1,19 @@
+apply plugin: "scala"
+
+scalaVersion = "2.7.6"
+repositories {
+  mavenRepo urls: "http://scala-tools.org/repo-releases/"
+}
+
+dependencies {
+  // Libraries needed to run the scala tools
+  scalaTools "org.scala-lang:scala-compiler:${scalaVersion}"
+  scalaTools "org.scala-lang:scala-library:${scalaVersion}"
+
+  // Libraries needed for scala api
+  compile "org.scala-lang:scala-library:${scalaVersion}"
+}
+
+createTask('wrapper', type: Wrapper).configure { 
+  gradleVersion = '0.9-preview-1' 
+}
