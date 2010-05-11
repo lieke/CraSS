@@ -1,9 +1,11 @@
 apply plugin: "scala"
 defaultTasks 'build'
 
-scalaVersion = "2.7.6"
+scalaVersion = "2.7.7"
 repositories {
   mavenRepo urls: "http://scala-tools.org/repo-releases/"
+  mavenRepo urls: "http://maven.shorrockin.com/"
+  mavenCentral()
 }
 
 dependencies {
@@ -13,6 +15,7 @@ dependencies {
 
   // Libraries needed for scala api
   compile "org.scala-lang:scala-library:${scalaVersion}"
+  compile "com.shorrockin:cascal:1.1"
 }
 
 task wrapper(type: Wrapper) { 
