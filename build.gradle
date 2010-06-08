@@ -1,4 +1,6 @@
 apply plugin: "scala"
+apply plugin: "eclipse"
+
 defaultTasks 'build'
 
 scalaVersion = "2.7.7"
