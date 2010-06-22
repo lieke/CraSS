@@ -1,8 +1,8 @@
 package com.xebia.crass.wordcount;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.xebia.crass.TwitterListener;
 import com.xebia.crass.model.Deletion;
@@ -12,7 +12,7 @@ public class WordCountingTwitterListener implements TwitterListener {
 	private final Map<String, Map<String,Long>> counts;
 	
 	public WordCountingTwitterListener() {
-		counts = new HashMap<String, Map<String,Long>>();
+		counts = new ConcurrentHashMap<String, Map<String,Long>>();
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class WordCountingTwitterListener implements TwitterListener {
 	private void updateCountForLanguageAndWord(String language, String word) {
 		Map<String,Long> countsForLanguage = counts.get(language);
 		if (countsForLanguage == null) {
-			countsForLanguage = new HashMap<String,Long>();
+			countsForLanguage = new ConcurrentHashMap<String,Long>();
 			counts.put(language, countsForLanguage);
 		}
 		
@@ -42,5 +42,9 @@ public class WordCountingTwitterListener implements TwitterListener {
 		} else {
 			countsForLanguage.put(word, count + 1);
 		}
+	}
+
+	public Map<String, Map<String, Long>> getCounts() {
+		return counts;
 	}
 }
