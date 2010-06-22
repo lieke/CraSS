@@ -3,12 +3,16 @@ package com.xebia.crass;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import com.xebia.crass.wordcount.WordCountingTwitterListener;
+import com.xebia.crass.wordcount.WordCountingTwitterListener.TwoLongs;
 
 public class Main {
 	protected static final String OUTPUT_DIR = "/Users/friso/Desktop/counts";
@@ -20,30 +24,36 @@ public class Main {
 		consumer.start();
 		
 		while (true) {
-			Thread.sleep(1000 * 600);
-			System.out.println(counter.getCounts());
+			for (int i = 0; i < 6; i++) {
+				Thread.sleep(1000 * 10);
+				System.out.println("Read " + consumer.getTweetCount() + " tweets!");
+			}
 			writeCountsToCsv(counter.getCounts());
 		}
 	}
 
-	private static void writeCountsToCsv(final Map<String, Map<String, Long>> counts) {
+	private static void writeCountsToCsv(final Map<String, Map<String, WordCountingTwitterListener.TwoLongs>> map) {
 		Thread writerThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Set<String> languages = counts.keySet();
+				DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+				String time = fmt.format(new Date());
+				
+				Set<String> languages = map.keySet();
 				for (String language : languages) {
-					File file = new File(OUTPUT_DIR, "counts." + language + "." + System.currentTimeMillis() + ".csv");
+					File file = new File(OUTPUT_DIR, "counts." + language + "." + time + ".csv");
 					try {
 						FileWriter writer = new FileWriter(file);
-						Set<Entry<String, Long>> entrySet = counts.get(language).entrySet();
-						for (Map.Entry<String, Long> entry : entrySet) {
-							writer.write("'" + entry.getKey() + "','" + entry.getValue().toString() + "'");
+						Set<Entry<String, TwoLongs>> entrySet = map.get(language).entrySet();
+						for (Map.Entry<String, TwoLongs> entry : entrySet) {
+							writer.write("\"" + entry.getKey().replace("\"", "\"\"") + "\"," + entry.getValue().getCount() + "\n");
 						}
 						writer.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
  				}
+				System.out.println("Written CSVs!");
 			}
 		});
 		
