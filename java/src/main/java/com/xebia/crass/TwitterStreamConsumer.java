@@ -26,12 +26,14 @@ import com.xebia.crass.model.Tweet;
 public class TwitterStreamConsumer {
 	private final Thread thread;
 	private volatile boolean stop;
+	private volatile long tweetCount;
 	
 	private static final Logger log = Logger.getLogger(TwitterStreamConsumer.class);
 	private ObjectMapper objectMapper;
 	private List<TwitterListener> listeners;
 	
 	public TwitterStreamConsumer(List<TwitterListener> listeners) {
+		tweetCount = 0;
 		thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -86,6 +88,7 @@ public class TwitterStreamConsumer {
 	}
 
 	private void handleTweet(String tweetJson) {
+		tweetCount++;
 		try {
 			if ("".equals(tweetJson) || 
 					tweetJson.startsWith("{\"limit\":")) {
@@ -126,5 +129,9 @@ public class TwitterStreamConsumer {
 		}
 		
 		stop = true;
+	}
+	
+	public long getTweetCount() {
+		return tweetCount;
 	}
 }
